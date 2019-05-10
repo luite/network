@@ -486,11 +486,11 @@ setNonBlockIfNeeded fd =
 --
 --   Since 2.7.0.0.
 setCloseOnExecIfNeeded :: CInt -> IO ()
-#if defined(mingw32_HOST_OS)
+##if defined(mingw32_HOST_OS) || defined(ghcjs_HOST_OS)
 setCloseOnExecIfNeeded _ = return ()
-#else
+##else
 setCloseOnExecIfNeeded fd = System.Posix.Internals.setCloseOnExec fd
-#endif
+##endif
 
 #if !defined(mingw32_HOST_OS)
 foreign import ccall unsafe "fcntl"
@@ -502,28 +502,28 @@ foreign import ccall unsafe "fcntl"
 --
 --   Since 2.7.0.0.
 getCloseOnExec :: CInt -> IO Bool
-#if defined(mingw32_HOST_OS)
+##if defined(mingw32_HOST_OS) || defined(ghcjs_HOST_OS)
 getCloseOnExec _ = return False
-#else
+##else
 getCloseOnExec fd = do
     flags <- c_fcntl_read fd fGetFd 0
     let ret = flags .&. fdCloexec
     return (ret /= 0)
-#endif
+##endif
 
 -- | Get the close_on_exec flag.
 --   On Windows, this function always returns 'False'.
 --
 --   Since 2.7.0.0.
 getNonBlock :: CInt -> IO Bool
-#if defined(mingw32_HOST_OS)
+##if defined(mingw32_HOST_OS) || defined(ghcjs_HOST_OS)
 getNonBlock _ = return False
-#else
+##else
 getNonBlock fd = do
     flags <- c_fcntl_read fd fGetFl 0
     let ret = flags .&. oNonBlock
     return (ret /= 0)
-#endif
+##endif
 
 -----------------------------------------------------------------------------
 -- Binding a socket
