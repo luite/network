@@ -9,7 +9,6 @@ autom4te.cache/*
 config.log
 config.mk
 config.status
-configure
 dist/*
 include/HsNetworkConfig.h
 include/HsNetworkConfig.h.in
